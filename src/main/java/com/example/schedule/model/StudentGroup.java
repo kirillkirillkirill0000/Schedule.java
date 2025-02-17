@@ -1,13 +1,14 @@
 package com.example.schedule.model;
+
 public class StudentGroup {
     private String specialityName;
     private String specialityCode;
-    private int numberOfStudents;
+    private int numberOfStudents; //кол-во студентов
     private String name;
     private int educationDegree;
 
     public StudentGroup() {
-        // Конструктор без параметров
+
     }
 
     // Getters and setters
@@ -20,7 +21,7 @@ public class StudentGroup {
     }
 
     public String getSpecialityCode() {
-        return specialityCode;
+        return specialityCode; //  код специальности
     }
 
     public void setSpecialityCode(String specialityCode) {
@@ -28,7 +29,7 @@ public class StudentGroup {
     }
 
     public int getNumberOfStudents() {
-        return numberOfStudents;
+        return numberOfStudents;   // количество студентов
     }
 
     public void setNumberOfStudents(int numberOfStudents) {
@@ -48,6 +49,6 @@ public class StudentGroup {
     }
 
     public void setEducationDegree(int educationDegree) {
-        this.educationDegree = educationDegree;
+        this.educationDegree = educationDegree;     // уровень образования
     }
 }

@@ -15,10 +15,9 @@ public class Employee {
     private String jobPositions;
 
     public Employee() {
-        // Конструктор без параметров
+
     }
 
-    // Getters and setters
     public int getId() {
         return id;
     }
@@ -28,19 +27,19 @@ public class Employee {
     }
 
     public String getFirstName() {
-        return firstName;
+        return firstName; // Получить имя
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        this.firstName = firstName; // Установить имя
     }
 
     public String getMiddleName() {
-        return middleName;
+        return middleName; // Получить отчество
     }
 
     public void setMiddleName(String middleName) {
-        this.middleName = middleName;
+        this.middleName = middleName; // Установить отчество
     }
 
     public String getLastName() {
@@ -64,7 +63,7 @@ public class Employee {
     }
 
     public void setDegree(String degree) {
-        this.degree = degree;
+        this.degree = degree;     // Аббревиатура степени
     }
 
     public String getDegreeAbbrev() {
@@ -76,7 +75,7 @@ public class Employee {
     }
 
     public String getRank() {
-        return rank;
+        return rank;       // Звание
     }
 
     public void setRank(String rank) {
@@ -112,6 +111,6 @@ public class Employee {
     }
 
     public void setJobPositions(String jobPositions) {
-        this.jobPositions = jobPositions;
+        this.jobPositions = jobPositions;   //  установка должн
     }
 }

@@ -13,6 +13,7 @@ public class ScheduleService {
     private ScheduleDAO scheduleDAO;
 
     public List<Schedule> getSchedule(String group, String date) {
-        return scheduleDAO.getSchedule(group, date);
+        // для получения расписания по группе и дате
+        return scheduleDAO.getSchedule(group, date); // Вызывает метод DAO для получения расписания
     }
 }

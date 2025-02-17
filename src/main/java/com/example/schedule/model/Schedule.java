@@ -21,10 +21,10 @@ public class Schedule {
     private boolean split;
 
     public Schedule() {
-        // Конструктор без параметров
+
     }
 
-    // Getters and setters
+
     public List<String> getAuditories() {
         return auditories;
     }
@@ -42,7 +42,7 @@ public class Schedule {
     }
 
     public String getLessonTypeAbbrev() {
-        return lessonTypeAbbrev;
+        return lessonTypeAbbrev;      //  аббревиатура типа занятия
     }
 
     public void setLessonTypeAbbrev(String lessonTypeAbbrev) {
@@ -50,7 +50,7 @@ public class Schedule {
     }
 
     public String getNote() {
-        return note;
+        return note;      //  примечание
     }
 
     public void setNote(String note) {
@@ -58,7 +58,7 @@ public class Schedule {
     }
 
     public int getNumSubgroup() {
-        return numSubgroup;
+        return numSubgroup;     // номер подгруппы
     }
 
     public void setNumSubgroup(int numSubgroup) {
@@ -102,7 +102,7 @@ public class Schedule {
     }
 
     public void setWeekNumber(List<Integer> weekNumber) {
-        this.weekNumber = weekNumber;
+        this.weekNumber = weekNumber;         //  номера недель
     }
 
     public List<Employee> getEmployees() {
@@ -110,7 +110,7 @@ public class Schedule {
     }
 
     public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
+        this.employees = employees;       //  список сотрудников
     }
 
     public String getDateLesson() {
@@ -142,11 +142,11 @@ public class Schedule {
     }
 
     public void setAnnouncement(boolean announcement) {
-        this.announcement = announcement;
+        this.announcement = announcement;      //  флаг объявления
     }
 
     public boolean isSplit() {
-        return split;
+        return split;      //  разделения занятий
     }
 
     public void setSplit(boolean split) {
