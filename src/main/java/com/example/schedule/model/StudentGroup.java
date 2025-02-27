@@ -1,54 +1,33 @@
 package com.example.schedule.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+// Класс, представляющий группу студентов
+@Data
+@Entity
+@NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class StudentGroup {
+
+    //  идентификатор группы студентов
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // Название специальности группы
     private String specialityName;
-    private String specialityCode;
-    private int numberOfStudents; //кол-во студентов
+
+    // Название группы студентов
     private String name;
-    private int educationDegree;
 
-    public StudentGroup() {
-
-    }
-
-    // Getters and setters
-    public String getSpecialityName() {
-        return specialityName;
-    }
-
-    public void setSpecialityName(String specialityName) {
-        this.specialityName = specialityName;
-    }
-
-    public String getSpecialityCode() {
-        return specialityCode; //  код специальности
-    }
-
-    public void setSpecialityCode(String specialityCode) {
-        this.specialityCode = specialityCode;
-    }
-
-    public int getNumberOfStudents() {
-        return numberOfStudents;   // количество студентов
-    }
-
-    public void setNumberOfStudents(int numberOfStudents) {
-        this.numberOfStudents = numberOfStudents;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getEducationDegree() {
-        return educationDegree;
-    }
-
-    public void setEducationDegree(int educationDegree) {
-        this.educationDegree = educationDegree;     // уровень образования
-    }
+    // Связь многие-ко-многим с расписанием
+    @ManyToMany(mappedBy = "studentGroups")
+    private List<Schedule> schedules = new ArrayList<>();
 }
