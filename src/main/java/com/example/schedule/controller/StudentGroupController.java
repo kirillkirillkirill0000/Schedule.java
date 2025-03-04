@@ -16,28 +16,28 @@ public class StudentGroupController {
     // Сервис для работы с группами студентов
     private final StudentGroupService studentGroupService;
 
-    // Конструктор внедрения зависимости StudentGroupService
-    @Autowired
+
+    @Autowired// Конструктор внедрения зависимости StudentGroupService
     public StudentGroupController(StudentGroupService studentGroupService) {
         this.studentGroupService = studentGroupService;
     }
 
-    // создания новой группы студентов
-    @PostMapping
+
+    @PostMapping// создания новой группы студентов
     public ResponseEntity<StudentGroup> createStudentGroup(@RequestBody StudentGroup studentGroup) {
         // Сохранение группы и возвращение её в ответе
         StudentGroup savedGroup = studentGroupService.save(studentGroup);
         return ResponseEntity.ok(savedGroup);
     }
 
-    // получения списка всех групп студентов
-    @GetMapping
+
+    @GetMapping// получения списка всех групп студентов
     public List<StudentGroup> getAllStudentGroups() {
         return studentGroupService.findAll();
     }
 
-    // получения группы студентов по ID
-    @GetMapping("/{id}")
+
+    @GetMapping("/{id}") // получения группы студентов по ID
     public ResponseEntity<StudentGroup> getStudentGroupById(@PathVariable Long id) {
         // Возвращение группы, если найдена, иначе 404
         return studentGroupService.findById(id)
@@ -45,23 +45,18 @@ public class StudentGroupController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    //  обновления существующей группы студентов
     @PutMapping("/{id}")
-    public ResponseEntity<StudentGroup> updateStudentGroup(@PathVariable Long id, @RequestBody StudentGroup studentGroupDetails) {
-        return studentGroupService.findById(id)
-                .map(studentGroup -> {
-                    // Обновление полей группы студентов
-                    studentGroup.setSpecialityName(studentGroupDetails.getSpecialityName());
-                    studentGroup.setName(studentGroupDetails.getName());
-                    // Сохранение обновленной группы и возвращение её в ответе
-                    StudentGroup updatedGroup = studentGroupService.save(studentGroup);
-                    return ResponseEntity.ok(updatedGroup);
-                })
-                .orElse(ResponseEntity.notFound().build()); // Возвращение 404, если не найдено
+    public ResponseEntity<StudentGroup> updateStudentGroup(@RequestBody StudentGroup studentGroupDetails) {
+        if (studentGroupDetails.getId() == null) {
+            return ResponseEntity.badRequest().build(); // Возвращаем 400, если ID не указан
+        }
+
+        StudentGroup updatedGroup = studentGroupService.update(studentGroupDetails.getId(), studentGroupDetails);
+        return ResponseEntity.ok(updatedGroup); // Возвращаем обновленную группу
     }
 
-    // удаления группы студентов по ID
-    @DeleteMapping("/{id}")
+
+    @DeleteMapping("/{id}")// удаления группы студентов по ID
     public ResponseEntity<Void> deleteStudentGroup(@PathVariable Long id) {
         studentGroupService.delete(id); // Удаление группы студентов
         return ResponseEntity.noContent().build(); // Возвращение 204 No Content

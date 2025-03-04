@@ -13,8 +13,8 @@ import java.util.List;
 @RestController
 public class ScheduleApiClientController {
 
-    // Репозиторий для взаимодействия
-    @Autowired
+
+    @Autowired// Репозиторий для взаимодействия
     private ScheduleApiClientRepository scheduleApiClient;
 
     // Обработчик GET-запроса для получения расписания по группе и дате
