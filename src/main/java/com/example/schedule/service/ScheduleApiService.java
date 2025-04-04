@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-// Сервис для работы с расписанием
+
 @Service
 public class ScheduleApiService {
 
@@ -15,9 +15,8 @@ public class ScheduleApiService {
     @Autowired
     private ScheduleApiClientRepository scheduleApiClient;
 
-    // Метод для получения расписания по группе и дате
+
     public List<ScheduleApiResponse.Schedule> getSchedule(String group, String date) {
-        // Вызов метода репозитория для получения расписания
         return scheduleApiClient.getSchedule(group, date);
     }
 }

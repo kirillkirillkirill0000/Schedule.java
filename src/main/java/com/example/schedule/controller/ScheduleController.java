@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// Контроллер для управления расписаниями
+
 @RestController
 @RequestMapping("/schedules")
 public class ScheduleController {
@@ -17,52 +17,58 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
 
-    @Autowired // Конструктор для внедрения зависимости
+    @Autowired
     public ScheduleController(ScheduleService scheduleService) {
         this.scheduleService = scheduleService;
     }
 
 
-    @PostMapping// создания нового расписания
+    @PostMapping
     public ResponseEntity<Schedule> createSchedule(@RequestBody Schedule schedule) {
         try {
-            // Сохранение расписания и возвращение его в ответе
+
             Schedule savedSchedule = scheduleService.save(schedule);
             return ResponseEntity.ok(savedSchedule);
         } catch (Exception e) {
-            // Обработка ошибок при сохранении
+
             return ResponseEntity.status(500).body(null);
         }
     }
 
+    @GetMapping("/by-type-and-subject")
+    public List<Schedule> getSchedulesByTypeAndSubject(
+            @RequestParam String lessonTypeAbbrev,
+            @RequestParam String subjectFullName) {
+        return scheduleService.findByLessonTypeAndSubject(lessonTypeAbbrev, subjectFullName);
+    }
 
-    @GetMapping //  получения списка всех расписаний
+    @GetMapping
     public List<Schedule> getAllSchedules() {
         return scheduleService.findAll();
     }
 
 
-    @GetMapping("/{id}")// получения расписания по ID
+    @GetMapping("/{id}")
     public ResponseEntity<Schedule> getScheduleById(@PathVariable Long id) {
         return scheduleService.findById(id)
-                .map(ResponseEntity::ok) // Возвращение расписания, если найдено
-                .orElse(ResponseEntity.notFound().build()); // Возвращение 404, если не найдено
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/update")
     public ResponseEntity<Schedule> updateSchedule(@RequestBody Schedule scheduleDetails) {
         if (scheduleDetails.getId() == null) {
-            return ResponseEntity.badRequest().build(); // Возвращаем 400, если ID не указан
+            return ResponseEntity.badRequest().build();
         }
 
         Schedule updatedSchedule = scheduleService.update(scheduleDetails.getId(), scheduleDetails);
-        return ResponseEntity.ok(updatedSchedule); // Возвращаем обновленное расписание
+        return ResponseEntity.ok(updatedSchedule);
     }
 
 
-    @DeleteMapping("/{id}")//  удаления расписания по ID
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
-        scheduleService.delete(id); // Удаление расписания
-        return ResponseEntity.noContent().build(); // Возвращение 204 нет контента
+        scheduleService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

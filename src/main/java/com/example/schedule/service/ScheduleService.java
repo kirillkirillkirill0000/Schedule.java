@@ -1,5 +1,6 @@
 package com.example.schedule.service;
 
+import com.example.schedule.Cache.ScheduleCache;
 import com.example.schedule.dao.ScheduleRepository;
 import com.example.schedule.model.Schedule;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,47 +9,58 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-// Сервис для работы с расписанием
 @Service
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final ScheduleCache scheduleCache;
 
-    //  для внедрения зависимости
     @Autowired
-    public ScheduleService(ScheduleRepository scheduleRepository) {
+    public ScheduleService(ScheduleRepository scheduleRepository, ScheduleCache scheduleCache) {
         this.scheduleRepository = scheduleRepository;
+        this.scheduleCache = scheduleCache;
     }
 
-       // Метод для получения всех расписаний
     public List<Schedule> findAll() {
-        return scheduleRepository.findAll();
+        return scheduleCache.getAll();
     }
 
-     // для поиска расписания по идентификатору
     public Optional<Schedule> findById(Long id) {
-        return scheduleRepository.findById(id);
+
+        Schedule cachedSchedule = scheduleCache.get(id);
+        if (cachedSchedule != null) {
+            return Optional.of(cachedSchedule);
+        }
+        Optional<Schedule> schedule = scheduleRepository.findById(id);
+        schedule.ifPresent(s -> scheduleCache.put(id, s));
+        return schedule;
     }
 
-    // Метод для сохранения нового расписания
     public Schedule save(Schedule schedule) {
-        return scheduleRepository.save(schedule);
+        Schedule savedSchedule = scheduleRepository.save(schedule);
+        scheduleCache.put(savedSchedule.getId(), savedSchedule);
+        return savedSchedule;
     }
 
-    // обновления существующего расписания
     public Schedule update(Long id, Schedule scheduleDetails) {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Schedule not found with id " + id));
-        // Обновление полей расписания
         schedule.setStartLessonTime(scheduleDetails.getStartLessonTime());
         schedule.setEndLessonTime(scheduleDetails.getEndLessonTime());
         schedule.setLessonTypeAbbrev(scheduleDetails.getLessonTypeAbbrev());
         schedule.setSubjectFullName(scheduleDetails.getSubjectFullName());
-        return scheduleRepository.save(schedule); // Сохранение обновленного расписания
+
+        Schedule updatedSchedule = scheduleRepository.save(schedule);
+        scheduleCache.put(id, updatedSchedule); // Обновление кэша
+        return updatedSchedule;
     }
 
-    // удаления расписания по идентификатору
     public void delete(Long id) {
         scheduleRepository.deleteById(id);
+        scheduleCache.invalidate(id);
+    }
+
+    public List<Schedule> findByLessonTypeAndSubject(String lessonTypeAbbrev, String subjectFullName) {
+        return scheduleRepository.findByLessonTypeAndSubjectFullName(lessonTypeAbbrev, subjectFullName);
     }
 }

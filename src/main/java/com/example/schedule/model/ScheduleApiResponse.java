@@ -15,7 +15,6 @@ public class ScheduleApiResponse {
     @Setter
     @Getter
     public static class Schedule {
-        // Геттеры и сеттеры
         private Long id;
         private List<String> auditories;
         private String startLessonTime;
