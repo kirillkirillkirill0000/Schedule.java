@@ -1,3 +1,4 @@
+// ScheduleService.java
 package com.example.schedule.service;
 
 import com.example.schedule.Cache.ScheduleCache;
@@ -22,37 +23,43 @@ public class ScheduleService {
     }
 
     public List<Schedule> findAll() {
-        return scheduleCache.getAll();
+        List<Schedule> cached = scheduleCache.getAll();
+        if (!cached.isEmpty()) {
+            return cached;
+        }
+        List<Schedule> schedules = scheduleRepository.findAll();
+        scheduleCache.putAll(schedules);
+        return schedules;
     }
 
     public Optional<Schedule> findById(Long id) {
-
-        Schedule cachedSchedule = scheduleCache.get(id);
-        if (cachedSchedule != null) {
-            return Optional.of(cachedSchedule);
+        Schedule cached = scheduleCache.get(id);
+        if (cached != null) {
+            return Optional.of(cached);
         }
         Optional<Schedule> schedule = scheduleRepository.findById(id);
-        schedule.ifPresent(s -> scheduleCache.put(id, s));
+        schedule.ifPresent(s -> scheduleCache.put(s.getId(), s));
         return schedule;
     }
 
     public Schedule save(Schedule schedule) {
-        Schedule savedSchedule = scheduleRepository.save(schedule);
-        scheduleCache.put(savedSchedule.getId(), savedSchedule);
-        return savedSchedule;
+        Schedule saved = scheduleRepository.save(schedule);
+        scheduleCache.put(saved.getId(), saved);
+        return saved;
     }
 
     public Schedule update(Long id, Schedule scheduleDetails) {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Schedule not found with id " + id));
+
         schedule.setStartLessonTime(scheduleDetails.getStartLessonTime());
         schedule.setEndLessonTime(scheduleDetails.getEndLessonTime());
         schedule.setLessonTypeAbbrev(scheduleDetails.getLessonTypeAbbrev());
         schedule.setSubjectFullName(scheduleDetails.getSubjectFullName());
 
-        Schedule updatedSchedule = scheduleRepository.save(schedule);
-        scheduleCache.put(id, updatedSchedule); // Обновление кэша
-        return updatedSchedule;
+        Schedule updated = scheduleRepository.save(schedule);
+        scheduleCache.put(id, updated);
+        return updated;
     }
 
     public void delete(Long id) {
@@ -61,6 +68,17 @@ public class ScheduleService {
     }
 
     public List<Schedule> findByLessonTypeAndSubject(String lessonTypeAbbrev, String subjectFullName) {
-        return scheduleRepository.findByLessonTypeAndSubjectFullName(lessonTypeAbbrev, subjectFullName);
+        String cacheKey = lessonTypeAbbrev + ":" + subjectFullName;
+        List<Schedule> cached = scheduleCache.getByCustomKey(cacheKey);
+        if (cached != null) {
+            return cached;
+        }
+
+        List<Schedule> schedules = scheduleRepository.findByLessonTypeAndSubjectFullName(
+                lessonTypeAbbrev, subjectFullName);
+        if (!schedules.isEmpty()) {
+            scheduleCache.putByCustomKey(cacheKey, schedules);
+        }
+        return schedules;
     }
 }

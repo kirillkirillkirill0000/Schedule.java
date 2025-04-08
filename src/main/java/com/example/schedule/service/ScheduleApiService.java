@@ -1,7 +1,7 @@
 package com.example.schedule.service;
 
 import com.example.schedule.dao.ScheduleApiClientRepository;
-import com.example.schedule.model.ScheduleApiResponse;
+import com.example.schedule.dto.ScheduleApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

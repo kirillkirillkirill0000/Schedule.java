@@ -1,6 +1,6 @@
 package com.example.schedule.dao;   // Data Access Object для работы с расписанием через API
 
-import com.example.schedule.model.ScheduleApiResponse;
+import com.example.schedule.dto.ScheduleApiResponse;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 

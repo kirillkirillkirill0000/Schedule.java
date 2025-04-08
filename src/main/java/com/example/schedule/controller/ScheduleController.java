@@ -1,3 +1,4 @@
+// ScheduleController.java
 package com.example.schedule.controller;
 
 import com.example.schedule.model.Schedule;
@@ -8,45 +9,40 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/schedules")
 public class ScheduleController {
-
-
     private final ScheduleService scheduleService;
-
 
     @Autowired
     public ScheduleController(ScheduleService scheduleService) {
         this.scheduleService = scheduleService;
     }
 
-
     @PostMapping
     public ResponseEntity<Schedule> createSchedule(@RequestBody Schedule schedule) {
         try {
-
             Schedule savedSchedule = scheduleService.save(schedule);
             return ResponseEntity.ok(savedSchedule);
         } catch (Exception e) {
-
-            return ResponseEntity.status(500).body(null);
+            return ResponseEntity.internalServerError().build();
         }
     }
 
     @GetMapping("/by-type-and-subject")
-    public List<Schedule> getSchedulesByTypeAndSubject(
+    public ResponseEntity<List<Schedule>> getSchedulesByTypeAndSubject(
             @RequestParam String lessonTypeAbbrev,
             @RequestParam String subjectFullName) {
-        return scheduleService.findByLessonTypeAndSubject(lessonTypeAbbrev, subjectFullName);
+        List<Schedule> schedules = scheduleService.findByLessonTypeAndSubject(
+                lessonTypeAbbrev, subjectFullName);
+        return ResponseEntity.ok(schedules);
     }
 
     @GetMapping
-    public List<Schedule> getAllSchedules() {
-        return scheduleService.findAll();
+    public ResponseEntity<List<Schedule>> getAllSchedules() {
+        List<Schedule> schedules = scheduleService.findAll();
+        return ResponseEntity.ok(schedules);
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<Schedule> getScheduleById(@PathVariable Long id) {
@@ -55,16 +51,13 @@ public class ScheduleController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<Schedule> updateSchedule(@RequestBody Schedule scheduleDetails) {
-        if (scheduleDetails.getId() == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        Schedule updatedSchedule = scheduleService.update(scheduleDetails.getId(), scheduleDetails);
-        return ResponseEntity.ok(updatedSchedule);
+    @PutMapping("/{id}")
+    public ResponseEntity<Schedule> updateSchedule(
+            @PathVariable Long id,
+            @RequestBody Schedule scheduleDetails) {
+        Schedule updated = scheduleService.update(id, scheduleDetails);
+        return ResponseEntity.ok(updated);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {

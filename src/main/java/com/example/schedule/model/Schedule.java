@@ -1,3 +1,4 @@
+// Schedule.java
 package com.example.schedule.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -14,22 +15,13 @@ import java.util.List;
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Schedule {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     private String startLessonTime;
-
-
     private String endLessonTime;
-
-    // Сокращение типа занятия
     private String lessonTypeAbbrev;
-
-    // Полное название предмета
     private String subjectFullName;
 
     @ManyToMany
