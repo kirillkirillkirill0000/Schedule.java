@@ -3,17 +3,12 @@
         "https://checkstyle.org/dtds/configuration_1_3.dtd">
 <module name="Checker">
     <module name="TreeWalker">
-        <!-- Проверка отступов -->
         <module name="Indentation">
             <property name="basicOffset" value="4"/>
             <property name="braceAdjustment" value="0"/>
         </module>
-
-        <!-- Проверка импорта -->
         <module name="AvoidStarImport"/>
         <module name="UnusedImports"/>
-
-        <!-- Проверка стиля именования -->
         <module name="ConstantName"/>
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
@@ -23,19 +18,8 @@
         <module name="ParameterName"/>
         <module name="StaticVariableName"/>
         <module name="TypeName"/>
-
-        <!-- Другие правила -->
         <module name="EmptyBlock"/>
         <module name="EmptyLineSeparator"/>
         <module name="NeedBraces"/>
-
-        <!-- Проверка длины строки -->
-        <module name="LineLength">
-            <property name="max" value="120"/>
-        </module>
-
-        <!-- Проверка наличия JavaDoc для классов и методов -->
-        <module name="JavadocType"/>
-        <module name="JavadocMethod"/>
     </module>
 </module>

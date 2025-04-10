@@ -1,4 +1,3 @@
-// ScheduleRepository.java
 package com.example.schedule.dao;
 
 import com.example.schedule.model.Schedule;

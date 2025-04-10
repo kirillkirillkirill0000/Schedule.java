@@ -1,4 +1,4 @@
-package com.example.schedule.dao;   // Data Access Object для работы с расписанием через API
+package com.example.schedule.dao;
 
 import com.example.schedule.dto.ScheduleApiResponse;
 import org.springframework.stereotype.Repository;

@@ -4,9 +4,11 @@ import lombok.Getter;
 
 @Getter
 public class ErrorResponse {
-    // Геттеры
+
     private final int status;
+
     private final String error;
+
     private final String message;
 
     public ErrorResponse(int status, String error, String message) {

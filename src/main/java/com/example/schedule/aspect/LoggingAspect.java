@@ -10,49 +10,49 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class LoggingAspect {
-    private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspect.class);
 
     @Around("execution(* com.example.schedule.controller..*(..))")
     public Object logControllerMethods(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();
-        logger.info("==> Вызов метода: {}.{}()",
+        LOGGER.info("==> Вызов метода: {}.{}()",
                 joinPoint.getTarget().getClass().getSimpleName(),
                 methodName);
 
         try {
-            Object result = joinPoint.proceed(); // Выполняем метод
-            logger.info("<== Успешное выполнение: {}.{}()",
+            Object result = joinPoint.proceed();
+            LOGGER.info("<== Успешное выполнение: {}.{}()",
                     joinPoint.getTarget().getClass().getSimpleName(),
                     methodName);
             return result;
         } catch (Exception ex) {
-            logger.error("<== Ошибка в {}.{}(): {}",
+            LOGGER.error("<== Ошибка в {}.{}(): {}",
                     joinPoint.getTarget().getClass().getSimpleName(),
                     methodName,
                     ex.getMessage());
-            throw ex; // Пробрасываем исключение дальше
+            throw ex;
         }
     }
 
     @Around("execution(* com.example.schedule.service..*(..))")
     public Object logServiceMethods(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();
-        logger.info("==> Вызов метода: {}.{}()",
+        LOGGER.info("==> Вызов метода: {}.{}()",
                 joinPoint.getTarget().getClass().getSimpleName(),
                 methodName);
 
         try {
-            Object result = joinPoint.proceed(); // Выполняем метод
-            logger.info("<== Успешное выполнение: {}.{}()",
+            Object result = joinPoint.proceed();
+            LOGGER.info("<== Успешное выполнение: {}.{}()",
                     joinPoint.getTarget().getClass().getSimpleName(),
                     methodName);
             return result;
         } catch (Exception ex) {
-            logger.error("<== Ошибка в {}.{}(): {}",
+            LOGGER.error("<== Ошибка в {}.{}(): {}",
                     joinPoint.getTarget().getClass().getSimpleName(),
                     methodName,
                     ex.getMessage());
-            throw ex; // Пробрасываем исключение дальше
+            throw ex;
         }
     }
 }

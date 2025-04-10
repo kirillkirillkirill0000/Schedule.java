@@ -16,12 +16,19 @@ public class ScheduleApiResponse {
     @Getter
     public static class Schedule {
         private Long id;
+
         private List<String> auditories;
+
         private String startLessonTime;
+
         private String endLessonTime;
-        private String lessonTypeAbbrev; // Сокращение типа занятия
+
+        private String lessonTypeAbbrev;    // Сокращение типа занятия
+
         private String subjectFullName; // Полное название предмета
+
         private List<StudentGroupApiResponse> studentGroups;
+
         private List<EmployeeApiResponse> employees;
 
     }

@@ -10,12 +10,11 @@ import org.slf4j.LoggerFactory;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    // Обработка ошибок 400 (Bad Request)
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(IllegalArgumentException ex, WebRequest request) {
-        logger.error("Ошибка 400: {}", ex.getMessage());
+        LOGGER.error("Ошибка 400: {}", ex.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Ошибка валидации",
@@ -24,10 +23,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    // Обработка ошибок 500 (Internal Server Error)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleInternalError(Exception ex, WebRequest request) {
-        logger.error("Ошибка 500: ", ex);
+        LOGGER.error("Ошибка 500: ", ex);
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Внутренняя ошибка сервера",

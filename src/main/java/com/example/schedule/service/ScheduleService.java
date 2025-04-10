@@ -1,4 +1,3 @@
-// ScheduleService.java
 package com.example.schedule.service;
 
 import com.example.schedule.Cache.ScheduleCache;
@@ -6,14 +5,13 @@ import com.example.schedule.dao.ScheduleRepository;
 import com.example.schedule.model.Schedule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ScheduleService {
-
     private final ScheduleRepository scheduleRepository;
+
     private final ScheduleCache scheduleCache;
 
     @Autowired
@@ -24,7 +22,7 @@ public class ScheduleService {
 
     public List<Schedule> findAll() {
         List<Schedule> cached = scheduleCache.getAll();
-        if (!cached.isEmpty()) {
+        if (cached != null && !cached.isEmpty()) {
             return cached;
         }
         List<Schedule> schedules = scheduleRepository.findAll();
@@ -51,12 +49,10 @@ public class ScheduleService {
     public Schedule update(Long id, Schedule scheduleDetails) {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Schedule not found with id " + id));
-
         schedule.setStartLessonTime(scheduleDetails.getStartLessonTime());
         schedule.setEndLessonTime(scheduleDetails.getEndLessonTime());
         schedule.setLessonTypeAbbrev(scheduleDetails.getLessonTypeAbbrev());
         schedule.setSubjectFullName(scheduleDetails.getSubjectFullName());
-
         Schedule updated = scheduleRepository.save(schedule);
         scheduleCache.put(id, updated);
         return updated;
@@ -73,12 +69,8 @@ public class ScheduleService {
         if (cached != null) {
             return cached;
         }
-
-        List<Schedule> schedules = scheduleRepository.findByLessonTypeAndSubjectFullName(
-                lessonTypeAbbrev, subjectFullName);
-        if (!schedules.isEmpty()) {
-            scheduleCache.putByCustomKey(cacheKey, schedules);
-        }
+        List<Schedule> schedules = scheduleRepository.findByLessonTypeAndSubjectFullName(lessonTypeAbbrev, subjectFullName);
+        scheduleCache.putByCustomKey(cacheKey, schedules);
         return schedules;
     }
 }

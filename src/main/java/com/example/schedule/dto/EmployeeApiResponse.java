@@ -8,8 +8,11 @@ import lombok.Setter;
 public class EmployeeApiResponse {
 
     private Long id;
+
     private String firstName;
+
     private String middleName;   // Отчество сотрудника
+
     private String lastName;   // Фамилия сотрудника
 
 }

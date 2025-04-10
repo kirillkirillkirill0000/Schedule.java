@@ -19,7 +19,6 @@ public class ScheduleApiClientController {
 
     @GetMapping("/api/schedule")
     public List<ScheduleApiResponse.Schedule> getSchedule(@RequestParam String group, @RequestParam String date) {
-        // Возвращает расписание для указанной группы и даты, полученное через репозиторий
         return scheduleApiClient.getSchedule(group, date);
     }
 }
