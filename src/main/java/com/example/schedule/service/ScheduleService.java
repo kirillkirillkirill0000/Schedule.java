@@ -5,6 +5,7 @@ import com.example.schedule.dao.ScheduleRepository;
 import com.example.schedule.model.Schedule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -69,7 +70,8 @@ public class ScheduleService {
         if (cached != null) {
             return cached;
         }
-        List<Schedule> schedules = scheduleRepository.findByLessonTypeAndSubjectFullName(lessonTypeAbbrev, subjectFullName);
+        List<Schedule> schedules = scheduleRepository
+                .findByLessonTypeAndSubjectFullName(lessonTypeAbbrev, subjectFullName);
         scheduleCache.putByCustomKey(cacheKey, schedules);
         return schedules;
     }

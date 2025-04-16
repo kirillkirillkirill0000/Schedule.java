@@ -10,7 +10,9 @@ import java.util.List;
 
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
-    @Query("SELECT s FROM Schedule s WHERE s.lessonTypeAbbrev = :lessonTypeAbbrev AND s.subjectFullName = :subjectFullName")
+    @Query("SELECT s FROM Schedule s " +
+            "WHERE s.lessonTypeAbbrev = :lessonTypeAbbrev " +
+            "AND s.subjectFullName = :subjectFullName")
     List<Schedule> findByLessonTypeAndSubjectFullName(
             @Param("lessonTypeAbbrev") String lessonTypeAbbrev,
             @Param("subjectFullName") String subjectFullName);

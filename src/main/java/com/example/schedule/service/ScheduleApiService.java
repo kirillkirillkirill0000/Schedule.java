@@ -7,14 +7,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
 @Service
 public class ScheduleApiService {
 
-
     @Autowired
     private ScheduleApiClientRepository scheduleApiClient;
-
 
     public List<ScheduleApiResponse.Schedule> getSchedule(String group, String date) {
         return scheduleApiClient.getSchedule(group, date);
