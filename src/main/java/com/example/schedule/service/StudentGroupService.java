@@ -6,12 +6,13 @@ import com.example.schedule.model.StudentGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentGroupService {
-
     private final StudentGroupRepository studentGroupRepository;
 
     private final StudentGroupCache studentGroupCache;
@@ -21,6 +22,15 @@ public class StudentGroupService {
                                StudentGroupCache studentGroupCache) {
         this.studentGroupRepository = studentGroupRepository;
         this.studentGroupCache = studentGroupCache;
+    }
+
+    public List<StudentGroup> saveAll(List<StudentGroup> studentGroups) {
+        List<StudentGroup> validGroups = studentGroups.stream()
+                .filter(group -> group.getSpecialityName() != null && group.getName() != null)
+                .collect(Collectors.toList());
+        List<StudentGroup> savedGroups = studentGroupRepository.saveAll(validGroups);
+        savedGroups.forEach(group -> studentGroupCache.put(group.getId(), group));
+        return savedGroups;
     }
 
     public List<StudentGroup> findAll() {

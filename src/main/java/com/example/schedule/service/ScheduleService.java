@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ScheduleService {
@@ -19,6 +20,15 @@ public class ScheduleService {
     public ScheduleService(ScheduleRepository scheduleRepository, ScheduleCache scheduleCache) {
         this.scheduleRepository = scheduleRepository;
         this.scheduleCache = scheduleCache;
+    }
+
+    public List<Schedule> saveAll(List<Schedule> schedules) {
+        List<Schedule> validSchedules = schedules.stream()
+                .filter(schedule -> schedule.getStartLessonTime() != null && schedule.getEndLessonTime() != null)
+                .collect(Collectors.toList());
+        List<Schedule> savedSchedules = scheduleRepository.saveAll(validSchedules);
+        savedSchedules.forEach(schedule -> scheduleCache.put(schedule.getId(), schedule));
+        return savedSchedules;
     }
 
     public List<Schedule> findAll() {

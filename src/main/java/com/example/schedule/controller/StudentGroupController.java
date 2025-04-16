@@ -18,12 +18,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/student-groups")
 public class StudentGroupController {
-
     private final StudentGroupService studentGroupService;
 
     @Autowired
     public StudentGroupController(StudentGroupService studentGroupService) {
         this.studentGroupService = studentGroupService;
+    }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<List<StudentGroup>> createStudentGroupsBulk(@RequestBody List<StudentGroup> studentGroups) {
+        List<StudentGroup> savedGroups = studentGroupService.saveAll(studentGroups);
+        return ResponseEntity.ok(savedGroups);
     }
 
     @PostMapping
@@ -51,7 +56,6 @@ public class StudentGroupController {
         if (id == null || !id.equals(studentGroupDetails.getId())) {
             return ResponseEntity.badRequest().build();
         }
-
         StudentGroup updatedGroup = studentGroupService.update(id, studentGroupDetails);
         return ResponseEntity.ok(updatedGroup);
     }

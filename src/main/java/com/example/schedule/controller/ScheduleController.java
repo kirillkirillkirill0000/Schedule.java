@@ -26,6 +26,12 @@ public class ScheduleController {
         this.scheduleService = scheduleService;
     }
 
+    @PostMapping("/bulk")
+    public ResponseEntity<List<Schedule>> createSchedulesBulk(@RequestBody List<Schedule> schedules) {
+        List<Schedule> savedSchedules = scheduleService.saveAll(schedules);
+        return ResponseEntity.ok(savedSchedules);
+    }
+
     @PostMapping
     public ResponseEntity<Schedule> createSchedule(@RequestBody Schedule schedule) {
         try {
