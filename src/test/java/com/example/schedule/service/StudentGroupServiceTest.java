@@ -3,7 +3,6 @@ package com.example.schedule.service;
 import com.example.schedule.Cache.StudentGroupCache;
 import com.example.schedule.dao.StudentGroupRepository;
 import com.example.schedule.model.StudentGroup;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,32 +16,32 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class StudentGroupServiceTest {
     @Mock
     private StudentGroupRepository studentGroupRepository;
+
     @Mock
     private StudentGroupCache studentGroupCache;
+
     @InjectMocks
     private StudentGroupService studentGroupService;
-    private StudentGroup studentGroup;
-
-    @BeforeEach
-    void setUp() {
-        studentGroup = new StudentGroup();
-        studentGroup.setId(1L);
-        studentGroup.setSpecialityName("Компьютерная инженерия");
-        studentGroup.setName("334702");
-    }
 
     @Test
-    void saveAll_ValidGroups_ReturnsSavedGroups() {
-        StudentGroup group2 = new StudentGroup();
-        group2.setId(2L);
-        group2.setSpecialityName("Системы и сети инфокоммуникаций");
-        group2.setName("333702");
+    void saveAllWithValidGroupsReturnsSavedGroups() {
+        StudentGroup studentGroup = mock(StudentGroup.class);
+        StudentGroup group2 = mock(StudentGroup.class);
+        when(studentGroup.getId()).thenReturn(1L);
+        when(studentGroup.getName()).thenReturn("334702");
+        when(studentGroup.getSpecialityName()).thenReturn("Компьютерная инженерия");
+        when(group2.getId()).thenReturn(2L);
+        when(group2.getName()).thenReturn("333702");
+        when(group2.getSpecialityName()).thenReturn("Системы и сети инфокоммуникаций");
+
         List<StudentGroup> inputGroups = Arrays.asList(studentGroup, group2);
         List<StudentGroup> savedGroups = Arrays.asList(studentGroup, group2);
         when(studentGroupRepository.saveAll(anyList())).thenReturn(savedGroups);
@@ -55,11 +54,14 @@ class StudentGroupServiceTest {
     }
 
     @Test
-    void saveAll_GroupsWithNullFields_FiltersOutInvalid() {
-        StudentGroup invalidGroup = new StudentGroup();
-        invalidGroup.setId(2L);
-        invalidGroup.setSpecialityName(null);
-        invalidGroup.setName("333702");
+    void saveAllWithNullFieldsFiltersOutInvalidGroups() {
+        StudentGroup studentGroup = mock(StudentGroup.class);
+        StudentGroup invalidGroup = mock(StudentGroup.class);
+        when(studentGroup.getId()).thenReturn(1L);
+        when(studentGroup.getName()).thenReturn("334702");
+        when(invalidGroup.getId()).thenReturn(2L);
+        when(invalidGroup.getSpecialityName()).thenReturn(null);
+
         List<StudentGroup> inputGroups = Arrays.asList(studentGroup, invalidGroup);
         List<StudentGroup> savedGroups = Collections.singletonList(studentGroup);
         when(studentGroupRepository.saveAll(anyList())).thenReturn(savedGroups);
@@ -71,7 +73,9 @@ class StudentGroupServiceTest {
     }
 
     @Test
-    void findAll_CacheHit_ReturnsCachedGroups() {
+    void findAllWithCacheHitReturnsCachedGroups() {
+        StudentGroup studentGroup = mock(StudentGroup.class);
+        when(studentGroup.getName()).thenReturn("334702");
         List<StudentGroup> cachedGroups = Collections.singletonList(studentGroup);
         when(studentGroupCache.getAll()).thenReturn(cachedGroups);
         List<StudentGroup> result = studentGroupService.findAll();
@@ -82,7 +86,9 @@ class StudentGroupServiceTest {
     }
 
     @Test
-    void findAll_CacheMiss_ReturnsFromRepository() {
+    void findAllWithCacheMissReturnsGroupsFromRepository() {
+        StudentGroup studentGroup = mock(StudentGroup.class);
+        when(studentGroup.getName()).thenReturn("334702");
         List<StudentGroup> groups = Collections.singletonList(studentGroup);
         when(studentGroupCache.getAll()).thenReturn(Collections.emptyList());
         when(studentGroupRepository.findAll()).thenReturn(groups);
@@ -95,7 +101,9 @@ class StudentGroupServiceTest {
     }
 
     @Test
-    void findById_CacheHit_ReturnsCachedGroup() {
+    void findByIdWithCacheHitReturnsCachedGroup() {
+        StudentGroup studentGroup = mock(StudentGroup.class);
+        when(studentGroup.getName()).thenReturn("334702");
         when(studentGroupCache.get(1L)).thenReturn(studentGroup);
         Optional<StudentGroup> result = studentGroupService.findById(1L);
         assertTrue(result.isPresent());
@@ -105,7 +113,10 @@ class StudentGroupServiceTest {
     }
 
     @Test
-    void findById_CacheMiss_ReturnsFromRepository() {
+    void findByIdWithCacheMissReturnsGroupFromRepository() {
+        StudentGroup studentGroup = mock(StudentGroup.class);
+        when(studentGroup.getId()).thenReturn(1L);
+        when(studentGroup.getName()).thenReturn("334702");
         when(studentGroupCache.get(1L)).thenReturn(null);
         when(studentGroupRepository.findById(1L)).thenReturn(Optional.of(studentGroup));
         Optional<StudentGroup> result = studentGroupService.findById(1L);
@@ -117,7 +128,10 @@ class StudentGroupServiceTest {
     }
 
     @Test
-    void save_ValidGroup_ReturnsSavedGroup() {
+    void saveWithValidGroupReturnsSavedGroup() {
+        StudentGroup studentGroup = mock(StudentGroup.class);
+        when(studentGroup.getId()).thenReturn(1L);
+        when(studentGroup.getName()).thenReturn("334702");
         when(studentGroupRepository.save(studentGroup)).thenReturn(studentGroup);
         StudentGroup result = studentGroupService.save(studentGroup);
         assertNotNull(result);
@@ -127,31 +141,36 @@ class StudentGroupServiceTest {
     }
 
     @Test
-    void update_GroupExists_ReturnsUpdatedGroup() {
-        StudentGroup updatedDetails = new StudentGroup();
-        updatedDetails.setSpecialityName("Радиосистемы и радиотехнологии");
-        updatedDetails.setName("334201");
+    void updateWithExistingGroupReturnsUpdatedGroup() {
+        StudentGroup studentGroup = mock(StudentGroup.class);
+        StudentGroup updatedDetails = mock(StudentGroup.class);
+        StudentGroup updatedGroup = mock(StudentGroup.class);
+        when(studentGroup.getId()).thenReturn(1L);
+        lenient().when(updatedDetails.getSpecialityName()).thenReturn("Радиосистемы и радиотехнологии");
+        lenient().when(updatedDetails.getName()).thenReturn("334201");
+        when(updatedGroup.getSpecialityName()).thenReturn("Радиосистемы и радиотехнологии");
+        when(updatedGroup.getName()).thenReturn("334201");
         when(studentGroupRepository.findById(1L)).thenReturn(Optional.of(studentGroup));
-        when(studentGroupRepository.save(any(StudentGroup.class))).thenReturn(studentGroup);
+        when(studentGroupRepository.save(any(StudentGroup.class))).thenReturn(updatedGroup);
         StudentGroup result = studentGroupService.update(1L, updatedDetails);
         assertEquals("334201", result.getName());
         assertEquals("Радиосистемы и радиотехнологии", result.getSpecialityName());
         verify(studentGroupRepository).findById(1L);
         verify(studentGroupRepository).save(studentGroup);
-        verify(studentGroupCache).put(1L, studentGroup);
+        verify(studentGroupCache).put(1L, updatedGroup);
     }
 
     @Test
-    void update_GroupNotFound_ThrowsException() {
-        StudentGroup updatedDetails = new StudentGroup();
+    void updateWithNonExistingGroupThrowsException() {
+        StudentGroup newDetails = mock(StudentGroup.class);
         when(studentGroupRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(RuntimeException.class, () -> studentGroupService.update(1L, updatedDetails));
+        assertThrows(RuntimeException.class, () -> studentGroupService.update(1L, newDetails));
         verify(studentGroupRepository).findById(1L);
         verify(studentGroupRepository, never()).save(any());
     }
 
     @Test
-    void delete_GroupExists_DeletesSuccessfully() {
+    void deleteWithExistingGroupDeletesSuccessfully() {
         studentGroupService.delete(1L);
         verify(studentGroupRepository).deleteById(1L);
         verify(studentGroupCache).invalidate(1L);
