@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Schedule</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:,">
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <h1>University Schedule</h1>
+        <div class="metrics">
+            <span id="requestCount">Requests: 0</span>
+            <button onclick="resetCounter()">Reset Counter</button>
+        </div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab('student-groups')">Student Groups</button>
+        <button class="tab-btn" onclick="openTab('schedules')">Schedules</button>
+        <button class="tab-btn" onclick="openTab('api-schedule')">API Schedule</button>
+    </div>
+
+    <div id="student-groups" class="tab-content" style="display: block;">
+        <h2>Student Groups Management</h2>
+        <div class="form-group">
+            <input type="text" id="groupName" placeholder="Group name">
+            <input type="text" id="specialityName" placeholder="Speciality name">
+            <button onclick="addStudentGroup()">Add Group</button>
+        </div>
+        <table id="groupsTable">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Speciality</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="schedules" class="tab-content">
+        <h2>Schedules Management</h2>
+        <div class="form-group">
+            <input type="text" id="startTime" placeholder="Start time (HH:mm)">
+            <input type="text" id="endTime" placeholder="End time (HH:mm)">
+            <input type="text" id="lessonType" placeholder="Lesson type">
+            <input type="text" id="subjectName" placeholder="Subject name">
+            <select id="groupSelect" multiple size="5">
+            </select>
+            <button onclick="addSchedule()">Add Schedule</button>
+        </div>
+        <table id="schedulesTable">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Lesson Type</th>
+                <th>Subject</th>
+                <th>Groups</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="api-schedule" class="tab-content">
+        <h2>API Schedule Lookup</h2>
+        <div class="form-group">
+            <input type="text" id="apiGroup" placeholder="Group number">
+            <input type="date" id="apiDate">
+            <button onclick="fetchApiSchedule()">Get Schedule</button>
+        </div>
+        <div id="apiResults"></div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

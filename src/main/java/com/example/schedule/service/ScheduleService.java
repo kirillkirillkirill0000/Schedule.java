@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 @Service
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
-
     private final ScheduleCache scheduleCache;
 
     @Autowired
@@ -81,7 +80,18 @@ public class ScheduleService {
             return cached;
         }
         List<Schedule> schedules = scheduleRepository
-                .findByLessonTypeAndSubjectFullName(lessonTypeAbbrev, subjectFullName);
+                .findByLessonTypeAbbrevAndSubjectFullName(lessonTypeAbbrev, subjectFullName);
+        scheduleCache.putByCustomKey(cacheKey, schedules);
+        return schedules;
+    }
+
+    public List<Schedule> findByGroupId(Long groupId) {
+        String cacheKey = "group:" + groupId;
+        List<Schedule> cached = scheduleCache.getByCustomKey(cacheKey);
+        if (cached != null) {
+            return cached;
+        }
+        List<Schedule> schedules = scheduleRepository.findByGroupId(groupId);
         scheduleCache.putByCustomKey(cacheKey, schedules);
         return schedules;
     }

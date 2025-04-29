@@ -10,10 +10,9 @@ import java.util.List;
 
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
-    @Query("SELECT s FROM Schedule s " +
-            "WHERE s.lessonTypeAbbrev = :lessonTypeAbbrev " +
-            "AND s.subjectFullName = :subjectFullName")
-    List<Schedule> findByLessonTypeAndSubjectFullName(
-            @Param("lessonTypeAbbrev") String lessonTypeAbbrev,
-            @Param("subjectFullName") String subjectFullName);
+
+    List<Schedule> findByLessonTypeAbbrevAndSubjectFullName(String lessonTypeAbbrev, String subjectFullName);
+
+    @Query("SELECT s FROM Schedule s JOIN s.studentGroups sg WHERE sg.id = :groupId")
+    List<Schedule> findByGroupId(@Param("groupId") Long groupId);
 }
