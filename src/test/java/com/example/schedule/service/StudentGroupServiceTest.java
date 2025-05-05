@@ -15,9 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -67,7 +65,7 @@ class StudentGroupServiceTest {
         when(studentGroupRepository.saveAll(anyList())).thenReturn(savedGroups);
         List<StudentGroup> result = studentGroupService.saveAll(inputGroups);
         assertEquals(1, result.size());
-        assertEquals("334702", result.getFirst().getName());
+        assertEquals("334702", result.get(0).getName());
         verify(studentGroupRepository).saveAll(Collections.singletonList(studentGroup));
         verify(studentGroupCache).put(1L, studentGroup);
     }
@@ -80,7 +78,7 @@ class StudentGroupServiceTest {
         when(studentGroupCache.getAll()).thenReturn(cachedGroups);
         List<StudentGroup> result = studentGroupService.findAll();
         assertEquals(1, result.size());
-        assertEquals("334702", result.getFirst().getName());
+        assertEquals("334702", result.get(0).getName());
         verify(studentGroupCache).getAll();
         verify(studentGroupRepository, never()).findAll();
     }
@@ -94,7 +92,7 @@ class StudentGroupServiceTest {
         when(studentGroupRepository.findAll()).thenReturn(groups);
         List<StudentGroup> result = studentGroupService.findAll();
         assertEquals(1, result.size());
-        assertEquals("334702", result.getFirst().getName());
+        assertEquals("334702", result.get(0).getName());
         verify(studentGroupCache).getAll();
         verify(studentGroupRepository).findAll();
         verify(studentGroupCache).putAll(groups);
