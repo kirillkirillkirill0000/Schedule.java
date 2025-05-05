@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @Service
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+
     private final ScheduleCache scheduleCache;
 
     @Autowired
