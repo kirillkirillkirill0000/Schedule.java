@@ -17,7 +17,7 @@
     <description>Spring-Labs</description>
 
     <properties>
-        <java.version>23</java.version>
+        <java.version>17</java.version>
         <checkstyle.version>10.12.1</checkstyle.version>
     </properties>
 
