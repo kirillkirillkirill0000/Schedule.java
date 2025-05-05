@@ -15,10 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -72,7 +69,7 @@ class ScheduleServiceTest {
         when(scheduleRepository.saveAll(anyList())).thenReturn(savedSchedules);
         List<Schedule> result = scheduleService.saveAll(inputSchedules);
         assertEquals(1, result.size());
-        assertEquals("Схемотехника", result.getFirst().getSubjectFullName());
+        assertEquals("Схемотехника", result.get(0).getSubjectFullName());
         verify(scheduleRepository).saveAll(Collections.singletonList(schedule));
         verify(scheduleCache).put(1L, schedule);
     }
@@ -98,7 +95,7 @@ class ScheduleServiceTest {
         when(scheduleCache.getAll()).thenReturn(cachedSchedules);
         List<Schedule> result = scheduleService.findAll();
         assertEquals(1, result.size());
-        assertEquals("Схемотехника", result.getFirst().getSubjectFullName());
+        assertEquals("Схемотехника", result.get(0).getSubjectFullName());
         verify(scheduleCache).getAll();
         verify(scheduleRepository, never()).findAll();
     }
@@ -112,7 +109,7 @@ class ScheduleServiceTest {
         when(scheduleRepository.findAll()).thenReturn(schedules);
         List<Schedule> result = scheduleService.findAll();
         assertEquals(1, result.size());
-        assertEquals("Схемотехника", result.getFirst().getSubjectFullName());
+        assertEquals("Схемотехника", result.get(0).getSubjectFullName());
         verify(scheduleCache).getAll();
         verify(scheduleRepository).findAll();
         verify(scheduleCache).putAll(schedules);
@@ -190,7 +187,7 @@ class ScheduleServiceTest {
         when(scheduleCache.getByCustomKey(cacheKey)).thenReturn(cachedSchedules);
         List<Schedule> result = scheduleService.findByLessonTypeAndSubject("ЛК", "Схемотехника");
         assertEquals(1, result.size());
-        assertEquals("Схемотехника", result.getFirst().getSubjectFullName());
+        assertEquals("Схемотехника", result.get(0).getSubjectFullName());
         verify(scheduleCache).getByCustomKey(cacheKey);
         verify(scheduleRepository, never()).findByLessonTypeAndSubjectFullName(anyString(), anyString());
     }
@@ -205,7 +202,7 @@ class ScheduleServiceTest {
         when(scheduleRepository.findByLessonTypeAndSubjectFullName("ЛК", "Схемотехника")).thenReturn(schedules);
         List<Schedule> result = scheduleService.findByLessonTypeAndSubject("ЛК", "Схемотехника");
         assertEquals(1, result.size());
-        assertEquals("Схемотехника", result.getFirst().getSubjectFullName());
+        assertEquals("Схемотехника", result.get(0).getSubjectFullName());
         verify(scheduleCache).getByCustomKey(cacheKey);
         verify(scheduleRepository).findByLessonTypeAndSubjectFullName("ЛК", "Схемотехника");
         verify(scheduleCache).putByCustomKey(cacheKey, schedules);

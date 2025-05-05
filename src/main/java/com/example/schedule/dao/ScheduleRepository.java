@@ -11,7 +11,11 @@ import java.util.List;
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
-    List<Schedule> findByLessonTypeAbbrevAndSubjectFullName(String lessonTypeAbbrev, String subjectFullName);
+    @Query("SELECT s FROM Schedule s WHERE s.lessonTypeAbbrev = :lessonType AND s.subjectFullName = :subject")
+    List<Schedule> findByLessonTypeAndSubjectFullName(
+            @Param("lessonType") String lessonTypeAbbrev,
+            @Param("subject") String subjectFullName
+    );
 
     @Query("SELECT s FROM Schedule s JOIN s.studentGroups sg WHERE sg.id = :groupId")
     List<Schedule> findByGroupId(@Param("groupId") Long groupId);
