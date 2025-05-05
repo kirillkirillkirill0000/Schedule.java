@@ -3,11 +3,11 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvn -B dependency:go-offline
 COPY src ./src
-RUN mvn -B package -DskipTests
+RUN mvn -B package -DskipTests -Dcheckstyle.skip=true
 
 FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
-ENV JAVA_OPTS="-XX:+UseSerialGC -Xss512k -XX:MaxRAM=512m -XX:MaxRAMPercentage=70.0"
+ENV JAVA_OPTS="-XX:+UseSerialGC -Xss256k -XX:MaxRAM=256m -XX:MaxRAMPercentage=70.0"
 EXPOSE 8080
 ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /app/app.jar"]
